@@ -1,0 +1,33 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>{{ model }} Bewerken</span>
+                    <a href="{{ route('{{ routeName }}.index') }}" class="btn btn-secondary btn-sm">
+                        Terug
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <form action="{{ route('{{ routeName }}.update', ${{ modelVariable }}) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+{{ formFields }}
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Bijwerken
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

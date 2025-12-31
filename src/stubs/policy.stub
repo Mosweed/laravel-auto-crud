@@ -1,0 +1,53 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }}\{{ model }};
+use {{ userModel }};
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class {{ model }}Policy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny({{ userClass }} $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view({{ userClass }} $user, {{ model }} ${{ modelVariable }}): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create({{ userClass }} $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update({{ userClass }} $user, {{ model }} ${{ modelVariable }}): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete({{ userClass }} $user, {{ model }} ${{ modelVariable }}): bool
+    {
+        return true;
+    }
+{{ softDeleteMethods }}
+}

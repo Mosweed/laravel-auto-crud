@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased h-full">
+    <div class="min-h-full">
+        <!-- Navigation -->
+        <nav class="bg-primary-600 dark:bg-gray-800">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <a href="{{ url('/') }}" class="text-white font-bold text-xl">
+                                {{ config('app.name', 'Laravel') }}
+                            </a>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="{{ url('/dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                    Dashboard
+                                </a>
+                                {{ navItems }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-4 flex items-center md:ml-6">
+                            @auth
+                                <span class="text-white text-sm mr-4">{{ Auth::user()->name }}</span>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                        Uitloggen
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                    Inloggen
+                                </a>
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                        Registreren
+                                    </a>
+                                @endif
+                            @endauth
+                        </div>
+                    </div>
+                    <!-- Mobile menu button -->
+                    <div class="-mr-2 flex md:hidden">
+                        <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="relative inline-flex items-center justify-center rounded-md bg-primary-600 p-2 text-white hover:bg-primary-500 hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div class="hidden md:hidden" id="mobile-menu">
+                <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                    <a href="{{ url('/dashboard') }}" class="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                        Dashboard
+                    </a>
+                    {{ navItemsMobile }}
+                </div>
+                <div class="border-t border-primary-700 pb-3 pt-4">
+                    @auth
+                        <div class="flex items-center px-5">
+                            <div class="text-base font-medium text-white">{{ Auth::user()->name }}</div>
+                        </div>
+                        <div class="mt-3 space-y-1 px-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                    Uitloggen
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="mt-3 space-y-1 px-2">
+                            <a href="{{ route('login') }}" class="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-primary-500 hover:bg-opacity-75">
+                                Inloggen
+                            </a>
+                        </div>
+                    @endauth
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        @isset($header)
+            <header class="bg-white dark:bg-gray-800 shadow">
+                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
+        @endisset
+
+        <!-- Page Content -->
+        <main>
+            {{ $slot }}
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <p class="text-center text-sm text-gray-500 dark:text-gray-400">
+                    &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. Alle rechten voorbehouden.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    @stack('scripts')
+</body>
+</html>

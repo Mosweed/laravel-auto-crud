@@ -1,0 +1,27 @@
+{
+    "name": "Post",
+    "fields": [
+        {"name": "title", "type": "string"},
+        {"name": "slug", "type": "string", "unique": true},
+        {"name": "excerpt", "type": "text", "nullable": true},
+        {"name": "body", "type": "text"},
+        {"name": "featured_image", "type": "string", "nullable": true},
+        {"name": "is_published", "type": "boolean", "default": false},
+        {"name": "published_at", "type": "datetime", "nullable": true},
+        {"name": "view_count", "type": "integer", "default": 0}
+    ],
+    "relationships": [
+        {"type": "belongsTo", "model": "User", "foreignKey": "author_id", "method": "author"},
+        {"type": "belongsTo", "model": "Category"},
+        {"type": "hasMany", "model": "Comment"},
+        {"type": "belongsToMany", "model": "Tag"}
+    ],
+    "options": {
+        "type": "both",
+        "css": "tailwind",
+        "all": true,
+        "softDeletes": true,
+        "apiResource": true,
+        "tests": true
+    }
+}

@@ -1,0 +1,61 @@
+<div>
+    <!-- Search & Filters -->
+    <div class="mb-6 flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Zoeken..." class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500">
+        </div>
+        <div class="flex gap-4">
+{{ trashedFilter }}
+            <select wire:model.live="perPage" class="rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary-500 focus:ring-primary-500">
+                <option value="15">15 per pagina</option>
+                <option value="25">25 per pagina</option>
+                <option value="50">50 per pagina</option>
+                <option value="100">100 per pagina</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    @if (session()->has('success'))
+        <div class="mb-4 bg-success-100 border border-success-400 text-success-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    <!-- Table -->
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+{{ tableHeaders }}
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Acties
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                @forelse (${{ modelVariablePlural }} as ${{ modelVariable }})
+                    <tr{{ trashedRowClass }}>
+{{ tableColumns }}
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ route('{{ routeName }}.show', ${{ modelVariable }}) }}" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">Bekijken</a>
+                            <a href="{{ route('{{ routeName }}.edit', ${{ modelVariable }}) }}" class="text-secondary-600 hover:text-secondary-900 dark:text-secondary-400 dark:hover:text-secondary-300 mr-3">Bewerken</a>
+{{ actionButtons }}
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="{{ columnCount }}" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                            Geen {{ modelPluralLower }} gevonden.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6">
+        {{ ${{ modelVariablePlural }}->links() }}
+    </div>
+</div>

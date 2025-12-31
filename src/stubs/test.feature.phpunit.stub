@@ -1,0 +1,126 @@
+<?php
+
+namespace Tests\Feature;
+
+use {{ modelNamespace }}\{{ model }};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class {{ model }}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    protected User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
+
+    /** @test */
+    public function it_can_display_the_index_page(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->get(route('{{ routeName }}.index'))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.index')
+            ->assertViewHas('{{ modelVariablePlural }}');
+    }
+
+    /** @test */
+    public function it_can_display_the_create_page(): void
+    {
+        $this->get(route('{{ routeName }}.create'))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.create');
+    }
+
+    /** @test */
+    public function it_can_create_a_new_{{ modelVariable }}(): void
+    {
+        $data = [
+{{ factoryData }}
+        ];
+
+        $this->post(route('{{ routeName }}.store'), $data)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('{{ table }}', $data);
+    }
+
+    /** @test */
+    public function it_validates_required_fields_when_creating(): void
+    {
+        $this->post(route('{{ routeName }}.store'), [])
+            ->assertSessionHasErrors([{{ requiredFields }}]);
+    }
+
+    /** @test */
+    public function it_can_display_the_show_page(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->get(route('{{ routeName }}.show', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.show')
+            ->assertViewHas('{{ modelVariable }}');
+    }
+
+    /** @test */
+    public function it_can_display_the_edit_page(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->get(route('{{ routeName }}.edit', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.edit')
+            ->assertViewHas('{{ modelVariable }}');
+    }
+
+    /** @test */
+    public function it_can_update_a_{{ modelVariable }}(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $data = [
+{{ updateData }}
+        ];
+
+        $this->put(route('{{ routeName }}.update', ${{ modelVariable }}), $data)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('{{ table }}', array_merge(['id' => ${{ modelVariable }}->id], $data));
+    }
+
+    /** @test */
+    public function it_can_delete_a_{{ modelVariable }}(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->delete(route('{{ routeName }}.destroy', ${{ modelVariable }}))
+            ->assertRedirect(route('{{ routeName }}.index'));
+    }
+
+    /** @test */
+    public function it_can_filter_{{ modelVariablePlural }}_by_search(): void
+    {
+        {{ model }}::factory()->count(5)->create();
+
+        $this->get(route('{{ routeName }}.index', ['search' => 'test']))
+            ->assertOk();
+    }
+
+    /** @test */
+    public function it_can_sort_{{ modelVariablePlural }}(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->get(route('{{ routeName }}.index', ['sort' => 'created_at', 'direction' => 'desc']))
+            ->assertOk();
+    }
+{{ softDeleteTests }}
+}

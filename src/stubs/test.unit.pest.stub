@@ -1,0 +1,56 @@
+<?php
+
+use {{ modelNamespace }}\{{ model }};
+
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+describe('{{ model }} Model', function () {
+
+    it('can be created using factory', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        expect(${{ modelVariable }})->toBeInstanceOf({{ model }}::class);
+        expect(${{ modelVariable }}->id)->not->toBeNull();
+    });
+
+    it('has fillable attributes', function () {
+        ${{ modelVariable }} = new {{ model }}();
+        $fillable = ${{ modelVariable }}->getFillable();
+
+        expect($fillable)->toBeArray();
+        expect($fillable)->not->toBeEmpty();
+    });
+
+    it('has correct table name', function () {
+        ${{ modelVariable }} = new {{ model }}();
+
+        expect(${{ modelVariable }}->getTable())->toBe('{{ table }}');
+    });
+
+    it('can be filtered', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $results = {{ model }}::filter([])->get();
+
+        expect($results)->toHaveCount(3);
+    });
+
+    it('can be sorted', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $results = {{ model }}::sort('created_at', 'desc')->get();
+
+        expect($results)->toHaveCount(3);
+    });
+
+});
+
+describe('{{ model }} Relationships', function () {
+
+    it('has defined relationships', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+{{ relationships }}
+    });
+
+});

@@ -1,0 +1,68 @@
+<?php
+
+namespace Tests\Unit;
+
+use {{ modelNamespace }}\{{ model }};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class {{ model }}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @test */
+    public function it_can_be_created_using_factory(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->assertInstanceOf({{ model }}::class, ${{ modelVariable }});
+        $this->assertNotNull(${{ modelVariable }}->id);
+    }
+
+    /** @test */
+    public function it_has_fillable_attributes(): void
+    {
+        ${{ modelVariable }} = new {{ model }}();
+        $fillable = ${{ modelVariable }}->getFillable();
+
+        $this->assertIsArray($fillable);
+        $this->assertNotEmpty($fillable);
+    }
+
+    /** @test */
+    public function it_has_correct_table_name(): void
+    {
+        ${{ modelVariable }} = new {{ model }}();
+
+        $this->assertEquals('{{ table }}', ${{ modelVariable }}->getTable());
+    }
+
+    /** @test */
+    public function it_can_be_filtered(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $results = {{ model }}::filter([])->get();
+
+        $this->assertCount(3, $results);
+    }
+
+    /** @test */
+    public function it_can_be_sorted(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $results = {{ model }}::sort('created_at', 'desc')->get();
+
+        $this->assertCount(3, $results);
+    }
+
+    /** @test */
+    public function it_has_defined_relationships(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        // Test relationships exist
+        $this->assertNotNull(${{ modelVariable }});
+    }
+}

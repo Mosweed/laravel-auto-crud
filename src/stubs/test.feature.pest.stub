@@ -1,0 +1,103 @@
+<?php
+
+use {{ modelNamespace }}\{{ model }};
+use App\Models\User;
+
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
+
+describe('{{ model }} CRUD', function () {
+
+    it('can display the index page', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->get(route('{{ routeName }}.index'))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.index')
+            ->assertViewHas('{{ modelVariablePlural }}');
+    });
+
+    it('can display the create page', function () {
+        $this->get(route('{{ routeName }}.create'))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.create');
+    });
+
+    it('can create a new {{ modelVariable }}', function () {
+        $data = [
+{{ factoryData }}
+        ];
+
+        $this->post(route('{{ routeName }}.store'), $data)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('{{ table }}', $data);
+    });
+
+    it('validates required fields when creating', function () {
+        $this->post(route('{{ routeName }}.store'), [])
+            ->assertSessionHasErrors([{{ requiredFields }}]);
+    });
+
+    it('can display the show page', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->get(route('{{ routeName }}.show', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.show')
+            ->assertViewHas('{{ modelVariable }}');
+    });
+
+    it('can display the edit page', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->get(route('{{ routeName }}.edit', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertViewIs('{{ viewPath }}.edit')
+            ->assertViewHas('{{ modelVariable }}');
+    });
+
+    it('can update a {{ modelVariable }}', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $data = [
+{{ updateData }}
+        ];
+
+        $this->put(route('{{ routeName }}.update', ${{ modelVariable }}), $data)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('{{ table }}', array_merge(['id' => ${{ modelVariable }}->id], $data));
+    });
+
+    it('can delete a {{ modelVariable }}', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->delete(route('{{ routeName }}.destroy', ${{ modelVariable }}))
+            ->assertRedirect(route('{{ routeName }}.index'));
+    });
+{{ softDeleteTests }}
+});
+
+describe('{{ model }} Filtering', function () {
+
+    it('can filter {{ modelVariablePlural }} by search', function () {
+        {{ model }}::factory()->count(5)->create();
+        $searchable = {{ model }}::factory()->create();
+
+        $this->get(route('{{ routeName }}.index', ['search' => $searchable->name ?? $searchable->id]))
+            ->assertOk();
+    });
+
+    it('can sort {{ modelVariablePlural }}', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->get(route('{{ routeName }}.index', ['sort' => 'created_at', 'direction' => 'desc']))
+            ->assertOk();
+    });
+
+});

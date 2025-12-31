@@ -1,0 +1,50 @@
+<?php
+
+namespace {{ namespace }};
+
+use AutoCrud\Traits\HasCrudOperations;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+{{ softDeletesImport }}
+
+class {{ class }} extends Model
+{
+    use HasFactory, HasCrudOperations{{ softDeletesTrait }};
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+{{ fillable }}
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+{{ casts }}
+    ];
+
+    /**
+     * The attributes that are filterable.
+     *
+     * @var array<int, string>
+     */
+    protected array $filterable = [
+{{ filterable }}
+    ];
+
+    /**
+     * The attributes that are sortable.
+     *
+     * @var array<int, string>
+     */
+    protected array $sortable = [
+{{ sortable }}
+    ];
+{{ relationships }}
+}

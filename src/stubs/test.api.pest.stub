@@ -1,0 +1,112 @@
+<?php
+
+use {{ modelNamespace }}\{{ model }};
+use App\Models\User;
+
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user, 'sanctum');
+});
+
+describe('{{ model }} API', function () {
+
+    it('can list all {{ modelVariablePlural }}', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->getJson(route('api.{{ routeName }}.index'))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['id']
+                ],
+                'links',
+                'meta',
+            ]);
+    });
+
+    it('can create a {{ modelVariable }} via API', function () {
+        $data = [
+{{ factoryData }}
+        ];
+
+        $this->postJson(route('api.{{ routeName }}.store'), $data)
+            ->assertCreated()
+            ->assertJsonStructure([
+                'data' => ['id'],
+                'message',
+            ]);
+
+        $this->assertDatabaseHas('{{ table }}', $data);
+    });
+
+    it('validates required fields via API', function () {
+        $this->postJson(route('api.{{ routeName }}.store'), [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors([{{ requiredFields }}]);
+    });
+
+    it('can show a {{ modelVariable }}', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->getJson(route('api.{{ routeName }}.show', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => ['id'],
+            ]);
+    });
+
+    it('can update a {{ modelVariable }} via API', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $data = [
+{{ updateData }}
+        ];
+
+        $this->putJson(route('api.{{ routeName }}.update', ${{ modelVariable }}), $data)
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => ['id'],
+                'message',
+            ]);
+    });
+
+    it('can delete a {{ modelVariable }} via API', function () {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->deleteJson(route('api.{{ routeName }}.destroy', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertJson(['message' => '{{ model }} succesvol verwijderd.']);
+    });
+
+    it('returns 404 for non-existent {{ modelVariable }}', function () {
+        $this->getJson(route('api.{{ routeName }}.show', 99999))
+            ->assertNotFound();
+    });
+
+});
+
+describe('{{ model }} API Filtering', function () {
+
+    it('can filter {{ modelVariablePlural }} via query params', function () {
+        {{ model }}::factory()->count(5)->create();
+
+        $this->getJson(route('api.{{ routeName }}.index', ['per_page' => 2]))
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    });
+
+    it('can sort {{ modelVariablePlural }} via API', function () {
+        {{ model }}::factory()->count(3)->create();
+
+        $response = $this->getJson(route('api.{{ routeName }}.index', [
+            'sort' => 'created_at',
+            'direction' => 'desc',
+        ]))->assertOk();
+
+        $data = $response->json('data');
+        expect(count($data))->toBeGreaterThan(0);
+    });
+
+});

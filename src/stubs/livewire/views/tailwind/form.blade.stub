@@ -1,0 +1,32 @@
+<div>
+    <form wire:submit="save">
+        <!-- Flash Messages -->
+        @if (session()->has('success'))
+            <div class="mb-4 bg-success-100 border border-success-400 text-success-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="mb-4 bg-danger-100 border border-danger-400 text-danger-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
+{{ formFields }}
+
+        <div class="flex items-center justify-end mt-6 gap-4">
+            <a href="{{ route('{{ routeName }}.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                Annuleren
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150" wire:loading.attr="disabled">
+                <span wire:loading.remove>
+                    {{ $isEditing ? 'Bijwerken' : 'Opslaan' }}
+                </span>
+                <span wire:loading>
+                    Bezig...
+                </span>
+            </button>
+        </div>
+    </form>
+</div>

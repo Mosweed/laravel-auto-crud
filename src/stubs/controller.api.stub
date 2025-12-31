@@ -1,0 +1,78 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }}\{{ model }};
+use {{ requestNamespace }}\{{ model }}\Store{{ model }}Request;
+use {{ requestNamespace }}\{{ model }}\Update{{ model }}Request;
+use {{ resourceNamespace }}\{{ model }}Resource;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+
+class {{ model }}Controller extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        ${{ modelVariablePlural }} = {{ model }}::query()
+            ->filter($request->all())
+            ->sortFromRequest($request)
+            {{ withTrashed }}
+            ->paginate($request->input('per_page', 15))
+            ->withQueryString();
+
+        return {{ model }}Resource::collection(${{ modelVariablePlural }});
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Store{{ model }}Request $request): JsonResponse
+    {
+        ${{ modelVariable }} = {{ model }}::create($request->validated());
+
+        return response()->json([
+            'message' => '{{ model }} succesvol aangemaakt.',
+            'data' => new {{ model }}Resource(${{ modelVariable }}),
+        ], 201);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }}): {{ model }}Resource
+    {
+        {{ loadRelationships }}
+        return new {{ model }}Resource(${{ modelVariable }});
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Update{{ model }}Request $request, {{ model }} ${{ modelVariable }}): JsonResponse
+    {
+        ${{ modelVariable }}->update($request->validated());
+
+        return response()->json([
+            'message' => '{{ model }} succesvol bijgewerkt.',
+            'data' => new {{ model }}Resource(${{ modelVariable }}->fresh()),
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }}): JsonResponse
+    {
+        ${{ modelVariable }}->delete();
+
+        return response()->json([
+            'message' => '{{ model }} succesvol verwijderd.',
+        ]);
+    }
+{{ softDeleteMethods }}
+}

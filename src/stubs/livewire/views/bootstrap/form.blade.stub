@@ -1,0 +1,33 @@
+<div>
+    <form wire:submit="save">
+        <!-- Flash Messages -->
+        @if (session()->has('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+{{ formFields }}
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{{ route('{{ routeName }}.index') }}" class="btn btn-secondary">
+                Annuleren
+            </a>
+            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                <span wire:loading.remove>
+                    {{ $isEditing ? 'Bijwerken' : 'Opslaan' }}
+                </span>
+                <span wire:loading>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Bezig...
+                </span>
+            </button>
+        </div>
+    </form>
+</div>

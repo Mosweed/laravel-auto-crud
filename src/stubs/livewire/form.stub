@@ -1,0 +1,61 @@
+<?php
+
+namespace {{ namespace }}\{{ modelPlural }};
+
+use {{ modelNamespace }}\{{ model }};
+use Livewire\Component;
+
+class {{ model }}Form extends Component
+{
+    public ?{{ model }} ${{ modelVariable }} = null;
+    public bool $isEditing = false;
+
+{{ properties }}
+
+    protected function rules(): array
+    {
+        return [
+{{ rules }}
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public function mount(?{{ model }} ${{ modelVariable }} = null): void
+    {
+        if (${{ modelVariable }}?->exists) {
+            $this->{{ modelVariable }} = ${{ modelVariable }};
+            $this->isEditing = true;
+            $this->fill(${{ modelVariable }}->only([
+{{ fillableFields }}
+            ]));
+        }
+    }
+
+    public function save(): void
+    {
+        $validated = $this->validate();
+
+        if ($this->isEditing) {
+            $this->authorize('update', $this->{{ modelVariable }});
+            $this->{{ modelVariable }}->update($validated);
+            session()->flash('success', '{{ model }} succesvol bijgewerkt.');
+        } else {
+            $this->authorize('create', {{ model }}::class);
+            ${{ modelVariable }} = {{ model }}::create($validated);
+            session()->flash('success', '{{ model }} succesvol aangemaakt.');
+        }
+
+        $this->redirect(route('{{ routeName }}.index'));
+    }
+
+    public function render()
+    {
+        return view('livewire.{{ viewPath }}.{{ modelKebab }}-form');
+    }
+}

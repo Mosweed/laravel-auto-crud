@@ -1,0 +1,61 @@
+<div>
+    <!-- Search & Filters -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Zoeken..." class="form-control">
+        </div>
+        <div class="col-md-3">
+{{ trashedFilter }}
+        </div>
+        <div class="col-md-3">
+            <select wire:model.live="perPage" class="form-select">
+                <option value="15">15 per pagina</option>
+                <option value="25">25 per pagina</option>
+                <option value="50">50 per pagina</option>
+                <option value="100">100 per pagina</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    @if (session()->has('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+{{ tableHeaders }}
+                    <th class="text-end">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse (${{ modelVariablePlural }} as ${{ modelVariable }})
+                    <tr{{ trashedRowClass }}>
+{{ tableColumns }}
+                        <td class="text-end">
+                            <a href="{{ route('{{ routeName }}.show', ${{ modelVariable }}) }}" class="btn btn-info btn-sm">Bekijken</a>
+                            <a href="{{ route('{{ routeName }}.edit', ${{ modelVariable }}) }}" class="btn btn-warning btn-sm">Bewerken</a>
+{{ actionButtons }}
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="{{ columnCount }}" class="text-center text-muted">
+                            Geen {{ modelPluralLower }} gevonden.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ ${{ modelVariablePlural }}->links() }}
+    </div>
+</div>

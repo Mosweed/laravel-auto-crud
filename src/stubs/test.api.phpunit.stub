@@ -1,0 +1,130 @@
+<?php
+
+namespace Tests\Feature\Api;
+
+use {{ modelNamespace }}\{{ model }};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class {{ model }}ApiTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user, 'sanctum');
+    }
+
+    /** @test */
+    public function it_can_list_all_{{ modelVariablePlural }}(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->getJson(route('api.{{ routeName }}.index'))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['id']
+                ],
+                'links',
+                'meta',
+            ]);
+    }
+
+    /** @test */
+    public function it_can_create_a_{{ modelVariable }}_via_api(): void
+    {
+        $data = [
+{{ factoryData }}
+        ];
+
+        $this->postJson(route('api.{{ routeName }}.store'), $data)
+            ->assertCreated()
+            ->assertJsonStructure([
+                'data' => ['id'],
+                'message',
+            ]);
+
+        $this->assertDatabaseHas('{{ table }}', $data);
+    }
+
+    /** @test */
+    public function it_validates_required_fields_via_api(): void
+    {
+        $this->postJson(route('api.{{ routeName }}.store'), [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors([{{ requiredFields }}]);
+    }
+
+    /** @test */
+    public function it_can_show_a_{{ modelVariable }}(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->getJson(route('api.{{ routeName }}.show', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => ['id'],
+            ]);
+    }
+
+    /** @test */
+    public function it_can_update_a_{{ modelVariable }}_via_api(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $data = [
+{{ updateData }}
+        ];
+
+        $this->putJson(route('api.{{ routeName }}.update', ${{ modelVariable }}), $data)
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => ['id'],
+                'message',
+            ]);
+    }
+
+    /** @test */
+    public function it_can_delete_a_{{ modelVariable }}_via_api(): void
+    {
+        ${{ modelVariable }} = {{ model }}::factory()->create();
+
+        $this->deleteJson(route('api.{{ routeName }}.destroy', ${{ modelVariable }}))
+            ->assertOk()
+            ->assertJson(['message' => '{{ model }} succesvol verwijderd.']);
+    }
+
+    /** @test */
+    public function it_returns_404_for_non_existent_{{ modelVariable }}(): void
+    {
+        $this->getJson(route('api.{{ routeName }}.show', 99999))
+            ->assertNotFound();
+    }
+
+    /** @test */
+    public function it_can_filter_{{ modelVariablePlural }}_via_query_params(): void
+    {
+        {{ model }}::factory()->count(5)->create();
+
+        $this->getJson(route('api.{{ routeName }}.index', ['per_page' => 2]))
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
+
+    /** @test */
+    public function it_can_sort_{{ modelVariablePlural }}_via_api(): void
+    {
+        {{ model }}::factory()->count(3)->create();
+
+        $this->getJson(route('api.{{ routeName }}.index', [
+            'sort' => 'created_at',
+            'direction' => 'desc',
+        ]))->assertOk();
+    }
+}
