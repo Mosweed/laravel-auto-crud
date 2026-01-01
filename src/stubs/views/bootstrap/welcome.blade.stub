@@ -1,76 +1,75 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-light">
-    <!-- Header -->
-    <header class="bg-primary text-white shadow">
-        <div class="container py-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1 class="h3 mb-0">{{ config('app.name', 'Laravel') }}</h1>
-                <nav>
-                    <a href="{{ url('/dashboard') }}" class="text-white text-decoration-none">Dashboard</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+@extends('layouts.app')
 
+@section('content')
+<div class="container py-4">
     <!-- Hero Section -->
-    <main class="py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="display-4 fw-bold">Welkom bij {{ config('app.name', 'Laravel') }}</h2>
-                <p class="lead text-muted">
-                    Uw applicatie is succesvol geïnstalleerd en klaar voor gebruik.
-                </p>
-            </div>
+    <div class="bg-primary text-white rounded-3 shadow p-5 mb-4">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold mb-3">Welkom bij {{ config('app.name', 'Laravel') }}</h1>
+            <p class="lead opacity-75">
+                Uw applicatie is succesvol geïnstalleerd en klaar voor gebruik.
+            </p>
+        </div>
+    </div>
 
-            <!-- Quick Links -->
-            <div class="row g-4 mt-4">
-                {{ quickLinks }}
-            </div>
+    <!-- Quick Links -->
+    <div class="mb-4">
+        <h3 class="h5 fw-semibold mb-3">Snelle toegang</h3>
+        <div class="row g-4">
+            {{ quickLinks }}
+        </div>
+    </div>
 
-            <!-- Getting Started -->
-            <div class="card mt-5 shadow-sm">
-                <div class="card-body p-4">
-                    <h3 class="card-title h4 mb-4">Aan de slag</h3>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <h5>📚 Documentatie</h5>
-                            <p class="text-muted">
+    <!-- Getting Started -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+            <h3 class="card-title h4 mb-4">Aan de slag</h3>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+                                <svg class="text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="fw-semibold">Documentatie</h5>
+                            <p class="text-muted mb-2">
                                 Bekijk de Laravel documentatie voor meer informatie over het framework.
                             </p>
-                            <a href="https://laravel.com/docs" target="_blank" class="text-primary">
-                                Bekijk docs →
+                            <a href="https://laravel.com/docs" target="_blank" class="text-primary text-decoration-none">
+                                Bekijk docs <span>&rarr;</span>
                             </a>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <h5>🚀 CRUD Generator</h5>
-                            <p class="text-muted">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                                <svg class="text-warning" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="fw-semibold">CRUD Generator</h5>
+                            <p class="text-muted mb-2">
                                 Genereer snel nieuwe CRUD modules met het make:crud commando.
                             </p>
-                            <code class="bg-light px-2 py-1 rounded">php artisan make:crud ModelName</code>
+                            <code class="bg-light px-3 py-2 rounded d-inline-block">php artisan make:crud ModelName</code>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-white border-top py-4 mt-5">
-        <div class="container">
-            <p class="text-center text-muted mb-0">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. Powered by Laravel & Auto CRUD.
-            </p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <div class="text-center text-muted mt-4">
+        <p class="mb-0">&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. Powered by Laravel & Auto CRUD.</p>
+    </div>
+</div>
+@endsection

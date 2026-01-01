@@ -46,15 +46,20 @@ class RouteGenerator extends BaseGenerator
         $created = false;
         if (!$this->files->exists($routeFile)) {
             $this->createApiRouteFile($routeFile);
-            $this->registerApiRoutesInBootstrap();
             $created = true;
         }
+
+        // Always check and register API routes in bootstrap/app.php
+        $registered = $this->registerApiRoutesInBootstrap();
 
         $added = $this->addRouteToFile($routeFile, $routeContent, $useStatement);
 
         $message = $added ? 'Routes toegevoegd aan routes/api.php' : 'Routes bestaan al in routes/api.php';
         if ($created) {
             $message = 'routes/api.php aangemaakt en routes toegevoegd';
+        }
+        if ($registered) {
+            $message .= ' (api.php geregistreerd in bootstrap/app.php)';
         }
 
         return [
@@ -63,6 +68,7 @@ class RouteGenerator extends BaseGenerator
             'message' => $message,
             'added' => $added,
             'created' => $created,
+            'registered' => $registered,
         ];
     }
 
@@ -84,31 +90,38 @@ PHP;
     /**
      * Register API routes in bootstrap/app.php for Laravel 11+.
      */
-    protected function registerApiRoutesInBootstrap(): void
+    protected function registerApiRoutesInBootstrap(): bool
     {
         $bootstrapFile = base_path('bootstrap/app.php');
 
         if (!$this->files->exists($bootstrapFile)) {
-            return;
+            return false;
         }
 
         $content = $this->files->get($bootstrapFile);
 
         // Check if api routes are already registered
-        if (str_contains($content, 'api:') || str_contains($content, 'api.php')) {
-            return;
+        if (str_contains($content, 'api:') || str_contains($content, "api.php'")) {
+            return false;
         }
 
         // Find the web: line and add api: after it
         if (str_contains($content, 'web:') && str_contains($content, '->withRouting(')) {
+            // Match the web: line with flexible spacing
+            $pattern = "/(web:\s*__DIR__\s*\.\s*['\"][^'\"]+['\"])(,?)/";
+
             $content = preg_replace(
-                "/(web:\s*__DIR__\s*\.\s*['\"]\.\.\/routes\/web\.php['\"],?)/",
-                "$1\n        api: __DIR__.'/../routes/api.php',",
-                $content
+                $pattern,
+                "$1,\n        api: __DIR__.'/../routes/api.php'$2",
+                $content,
+                1
             );
 
             $this->files->put($bootstrapFile, $content);
+            return true;
         }
+
+        return false;
     }
 
     /**
