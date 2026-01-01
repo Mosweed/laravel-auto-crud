@@ -13,9 +13,7 @@
             ],
             "relationships": [
                 {"type": "belongsTo", "model": "Category"},
-                {"type": "belongsTo", "model": "User", "foreignKey": "author_id", "method": "author"},
-                {"type": "hasMany", "model": "Review"},
-                {"type": "belongsToMany", "model": "Tag", "pivot": "product_tag"}
+                {"type": "hasMany", "model": "Review"}
             ],
             "options": {
                 "softDeletes": true,
@@ -31,7 +29,6 @@
                 {"name": "sort_order", "type": "integer", "default": 0}
             ],
             "relationships": [
-                {"type": "belongsTo", "model": "Category", "foreignKey": "parent_id", "method": "parent", "nullable": true},
                 {"type": "hasMany", "model": "Product"},
                 {"type": "hasMany", "model": "Category", "method": "children"}
             ]
@@ -45,8 +42,7 @@
                 {"name": "is_approved", "type": "boolean", "default": false}
             ],
             "relationships": [
-                {"type": "belongsTo", "model": "Product"},
-                {"type": "belongsTo", "model": "User"}
+                {"type": "belongsTo", "model": "Product"}
             ]
         },
         {
@@ -55,10 +51,8 @@
                 {"name": "name", "type": "string"},
                 {"name": "slug", "type": "string", "unique": true},
                 {"name": "color", "type": "string", "length": 7, "nullable": true}
-            ],
-            "relationships": [
-                {"type": "belongsToMany", "model": "Product"}
             ]
+
         }
     ],
     "options": {

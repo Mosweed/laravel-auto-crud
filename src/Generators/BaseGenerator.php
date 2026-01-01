@@ -140,12 +140,21 @@ abstract class BaseGenerator
     }
 
     /**
+     * Get the model name in lowercase.
+     */
+    protected function getModelLower(): string
+    {
+        return strtolower($this->modelName);
+    }
+
+    /**
      * Get common replacements.
      */
     protected function getCommonReplacements(): array
     {
         return [
             'model' => $this->modelName,
+            'modelLower' => $this->getModelLower(),
             'modelVariable' => $this->getModelVariable(),
             'modelVariablePlural' => $this->getModelVariablePlural(),
             'modelPlural' => $this->getModelPlural(),

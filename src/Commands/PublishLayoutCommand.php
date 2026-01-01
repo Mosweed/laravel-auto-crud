@@ -3,6 +3,7 @@
 namespace AutoCrud\Commands;
 
 use AutoCrud\Generators\LayoutGenerator;
+use AutoCrud\Generators\WelcomeGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
@@ -14,13 +15,14 @@ class PublishLayoutCommand extends Command
      */
     protected $signature = 'crud:layout
                             {--css=tailwind : CSS framework (tailwind, bootstrap)}
-                            {--force : Overwrite existing layout}
+                            {--force : Overwrite existing files}
+                            {--welcome : Also publish welcome page}
                             {--models=* : Models to add to navigation}';
 
     /**
      * The console command description.
      */
-    protected $description = 'Publish the Auto CRUD app layout with navigation';
+    protected $description = 'Publish the Auto CRUD app layout and welcome page';
 
     /**
      * The filesystem instance.
@@ -98,7 +100,34 @@ class PublishLayoutCommand extends Command
             $this->warn('  <fg=yellow>⚠</> Layout already exists. Use --force to overwrite.');
         }
 
+        // Publish welcome page if requested
+        if ($this->option('welcome')) {
+            $this->publishWelcomePage($css, $force);
+        }
+
         return Command::SUCCESS;
+    }
+
+    /**
+     * Publish the welcome page.
+     */
+    protected function publishWelcomePage(string $css, bool $force): void
+    {
+        $this->newLine();
+        $this->info('Publishing welcome page...');
+
+        $generator = new WelcomeGenerator('', [
+            'css' => $css,
+            'force' => $force,
+        ]);
+
+        $result = $generator->generate();
+
+        if ($result['created']) {
+            $this->info('  <fg=green>✓</> Welcome page published: ' . $result['path']);
+        } else {
+            $this->warn('  <fg=yellow>⚠</> Welcome page already exists. Use --force to overwrite.');
+        }
     }
 
     /**

@@ -1,25 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Nieuwe {{ model }}</span>
-                    <a href="{{ route('{{ routeName }}.index') }}" class="btn btn-secondary btn-sm">
-                        Terug
-                    </a>
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary rounded-3 p-2 me-3">
+                        <svg class="text-white" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="h3 mb-0 fw-bold">Nieuwe {{ model }}</h1>
+                        <p class="text-muted mb-0 small">Vul de gegevens in om een nieuwe {{ modelLower }} aan te maken</p>
+                    </div>
                 </div>
+                <a href="{{ route('{{ routeName }}.index') }}" class="btn btn-outline-secondary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Terug naar overzicht
+                </a>
+            </div>
 
-                <div class="card-body">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
                     <form action="{{ route('{{ routeName }}.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
 {{ formFields }}
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('{{ routeName }}.index') }}" class="btn btn-link text-secondary">
+                                Annuleren
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
                                 Opslaan
                             </button>
                         </div>
