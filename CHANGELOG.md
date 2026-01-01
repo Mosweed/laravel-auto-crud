@@ -5,9 +5,25 @@ Alle belangrijke wijzigingen aan dit project worden gedocumenteerd in dit bestan
 Het formaat is gebaseerd op [Keep a Changelog](https://keepachangelog.com/nl/1.0.0/),
 en dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
-## [Unreleased]
+## [1.0.3] - 2026-01-01
 
-## [1.2.0] - 2026-01-01
+### Added
+- Complete DOCUMENTATION.md met uitgebreide package documentatie
+- Logo en website badges in README en DOCUMENTATION
+- Dark mode friendly README design met gecentreerde branding
+
+### Changed
+- Welcome page templates gebruiken nu `<x-app-layout>` (Tailwind) en `@extends('layouts.app')` (Bootstrap)
+- Tailwind v4 gemarkeerd als standaard in documentatie (v3 als legacy)
+- README volledig herschreven met modern dark mode ontwerp
+- Verbeterde API route registratie - controleert nu altijd bootstrap/app.php
+
+### Fixed
+- API routes worden nu betrouwbaar geregistreerd in bootstrap/app.php voor Laravel 11+
+
+---
+
+## [1.0.2] - 2026-01-01
 
 ### Added
 - Welcome page generator met `--welcome` optie voor `crud:layout` commando
