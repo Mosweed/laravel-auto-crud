@@ -42,14 +42,73 @@ class RouteGenerator extends BaseGenerator
         $routeContent = $this->getApiRouteContent();
         $useStatement = $this->getApiUseStatement();
 
+        // Create api.php if it doesn't exist
+        $created = false;
+        if (!$this->files->exists($routeFile)) {
+            $this->createApiRouteFile($routeFile);
+            $this->registerApiRoutesInBootstrap();
+            $created = true;
+        }
+
         $added = $this->addRouteToFile($routeFile, $routeContent, $useStatement);
+
+        $message = $added ? 'Routes toegevoegd aan routes/api.php' : 'Routes bestaan al in routes/api.php';
+        if ($created) {
+            $message = 'routes/api.php aangemaakt en routes toegevoegd';
+        }
 
         return [
             'content' => $routeContent,
             'file' => $routeFile,
-            'message' => $added ? 'Routes toegevoegd aan routes/api.php' : 'Routes bestaan al in routes/api.php',
+            'message' => $message,
             'added' => $added,
+            'created' => $created,
         ];
+    }
+
+    /**
+     * Create api.php route file.
+     */
+    protected function createApiRouteFile(string $file): void
+    {
+        $content = <<<'PHP'
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+PHP;
+
+        $this->files->put($file, $content);
+    }
+
+    /**
+     * Register API routes in bootstrap/app.php for Laravel 11+.
+     */
+    protected function registerApiRoutesInBootstrap(): void
+    {
+        $bootstrapFile = base_path('bootstrap/app.php');
+
+        if (!$this->files->exists($bootstrapFile)) {
+            return;
+        }
+
+        $content = $this->files->get($bootstrapFile);
+
+        // Check if api routes are already registered
+        if (str_contains($content, 'api:') || str_contains($content, 'api.php')) {
+            return;
+        }
+
+        // Find the web: line and add api: after it
+        if (str_contains($content, 'web:') && str_contains($content, '->withRouting(')) {
+            $content = preg_replace(
+                "/(web:\s*__DIR__\s*\.\s*['\"]\.\.\/routes\/web\.php['\"],?)/",
+                "$1\n        api: __DIR__.'/../routes/api.php',",
+                $content
+            );
+
+            $this->files->put($bootstrapFile, $content);
+        }
     }
 
     /**

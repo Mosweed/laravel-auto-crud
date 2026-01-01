@@ -37,7 +37,7 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
-                            @auth
+                            {{-- @auth
                                 <span class="text-white text-sm mr-4">{{ Auth::user()->name }}</span>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -54,7 +54,7 @@
                                         Registreren
                                     </a>
                                 @endif
-                            @endauth
+                            @endauth --}}
                         </div>
                     </div>
                     <!-- Mobile menu button -->
@@ -78,7 +78,7 @@
                     {{ navItemsMobile }}
                 </div>
                 <div class="border-t border-primary-700 pb-3 pt-4">
-                    @auth
+                    {{-- @auth
                         <div class="flex items-center px-5">
                             <div class="text-base font-medium text-white">{{ Auth::user()->name }}</div>
                         </div>
@@ -96,7 +96,7 @@
                                 Inloggen
                             </a>
                         </div>
-                    @endauth
+                    @endauth --}}
                 </div>
             </div>
         </nav>

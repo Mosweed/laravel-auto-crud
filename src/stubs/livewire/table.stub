@@ -42,7 +42,6 @@ class {{ model }}Table extends Component
 
     public function delete({{ model }} ${{ modelVariable }}): void
     {
-        $this->authorize('delete', ${{ modelVariable }});
         ${{ modelVariable }}->delete();
         session()->flash('success', '{{ model }} succesvol verwijderd.');
     }

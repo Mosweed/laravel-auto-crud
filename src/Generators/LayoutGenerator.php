@@ -125,6 +125,78 @@ class LayoutGenerator extends BaseGenerator
     }
 
     /**
+     * Inject Tailwind v4 theme colors into app.css.
+     */
+    public function injectTailwindTheme(): array
+    {
+        $cssPath = resource_path('css/app.css');
+
+        if (!$this->files->exists($cssPath)) {
+            return [
+                'success' => false,
+                'message' => 'app.css not found',
+            ];
+        }
+
+        $content = $this->files->get($cssPath);
+
+        // Check if already injected
+        if (str_contains($content, '--color-primary-500')) {
+            return [
+                'success' => false,
+                'message' => 'Theme colors already exist',
+            ];
+        }
+
+        // Get theme stub content
+        $themeColors = $this->getStubContent('css/tailwind-theme.stub');
+
+        // Check if @theme block exists (Tailwind v4)
+        if (str_contains($content, '@theme {')) {
+            // Inject before closing brace of @theme
+            $content = preg_replace(
+                '/(@theme\s*\{[^}]*)(})/s',
+                "$1\n{$themeColors}\n$2",
+                $content
+            );
+        } else {
+            // Add @theme block at the end (for new setups)
+            $content .= "\n@theme {\n{$themeColors}\n}\n";
+        }
+
+        $this->files->put($cssPath, $content);
+
+        return [
+            'success' => true,
+            'message' => 'Theme colors injected',
+        ];
+    }
+
+    /**
+     * Detect Tailwind version from package.json.
+     */
+    public function detectTailwindVersion(): int
+    {
+        $packageJsonPath = base_path('package.json');
+
+        if (!$this->files->exists($packageJsonPath)) {
+            return 3; // Default to v3
+        }
+
+        $packageJson = json_decode($this->files->get($packageJsonPath), true);
+        $devDeps = $packageJson['devDependencies'] ?? [];
+        $deps = $packageJson['dependencies'] ?? [];
+
+        $tailwindVersion = $devDeps['tailwindcss'] ?? $deps['tailwindcss'] ?? '3.0.0';
+
+        // Extract major version number
+        preg_match('/(\d+)/', $tailwindVersion, $matches);
+        $majorVersion = (int) ($matches[1] ?? 3);
+
+        return $majorVersion;
+    }
+
+    /**
      * Add a navigation item to an existing layout.
      */
     public function addNavItem(string $modelName): bool

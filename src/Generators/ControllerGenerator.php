@@ -123,7 +123,6 @@ class ControllerGenerator extends BaseGenerator
     public function restore(int \$id): JsonResponse
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('restore', \${$variable});
         \${$variable}->restore();
 
         return response()->json([
@@ -138,7 +137,6 @@ class ControllerGenerator extends BaseGenerator
     public function forceDelete(int \$id): JsonResponse
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('forceDelete', \${$variable});
         \${$variable}->forceDelete();
 
         return response()->json([
@@ -162,7 +160,6 @@ PHP;
     public function restore(int \$id): RedirectResponse
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('restore', \${$variable});
         \${$variable}->restore();
 
         return redirect()
@@ -176,7 +173,6 @@ PHP;
     public function forceDelete(int \$id): RedirectResponse
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('forceDelete', \${$variable});
         \${$variable}->forceDelete();
 
         return redirect()

@@ -62,19 +62,38 @@ class PublishLayoutCommand extends Command
 
         if ($result['created']) {
             $this->info('  <fg=green>✓</> Layout published: ' . $result['path']);
-            $this->newLine();
 
             if (!empty($models)) {
+                $this->newLine();
                 $this->info('Navigation items added for:');
                 foreach ($models as $model) {
                     $this->line("  - {$model}");
                 }
             }
 
+            // Detect Tailwind version and inject theme if v4
+            if ($css === 'tailwind') {
+                $tailwindVersion = $generator->detectTailwindVersion();
+
+                if ($tailwindVersion >= 4) {
+                    $themeResult = $generator->injectTailwindTheme();
+
+                    if ($themeResult['success']) {
+                        $this->info('  <fg=green>✓</> Tailwind v4 theme colors added to app.css');
+                    } else {
+                        $this->line("  <fg=yellow>→</> {$themeResult['message']}");
+                    }
+
+                    $this->newLine();
+                    $this->comment('Tailwind v4: Pas kleuren aan in resources/css/app.css onder @theme');
+                } else {
+                    $this->newLine();
+                    $this->comment('Tailwind v3: Pas kleuren aan in tailwind.config.js');
+                }
+            }
+
             $this->newLine();
             $this->info('Gebruik de layout in je views met: <x-app-layout>');
-            $this->newLine();
-            $this->comment('Tip: Vergeet niet je tailwind.config.js te updaten met de primary kleur!');
         } else {
             $this->warn('  <fg=yellow>⚠</> Layout already exists. Use --force to overwrite.');
         }

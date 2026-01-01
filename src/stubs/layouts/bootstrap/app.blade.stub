@@ -35,7 +35,7 @@
                     {{ navItems }}
                 </ul>
                 <ul class="navbar-nav">
-                    @auth
+                    {{-- @auth
                         <li class="nav-item">
                             <span class="nav-link">{{ Auth::user()->name }}</span>
                         </li>
@@ -54,7 +54,7 @@
                                 <a class="nav-link" href="{{ route('register') }}">Registreren</a>
                             </li>
                         @endif
-                    @endauth
+                    @endauth --}}
                 </ul>
             </div>
         </div>

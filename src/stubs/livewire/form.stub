@@ -42,11 +42,9 @@ class {{ model }}Form extends Component
         $validated = $this->validate();
 
         if ($this->isEditing) {
-            $this->authorize('update', $this->{{ modelVariable }});
             $this->{{ modelVariable }}->update($validated);
             session()->flash('success', '{{ model }} succesvol bijgewerkt.');
         } else {
-            $this->authorize('create', {{ model }}::class);
             ${{ modelVariable }} = {{ model }}::create($validated);
             session()->flash('success', '{{ model }} succesvol aangemaakt.');
         }

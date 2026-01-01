@@ -46,7 +46,29 @@ php artisan crud:layout
 
 ### Configure Tailwind Colors
 
-Add the following colors to your `tailwind.config.js`:
+The `crud:layout` command automatically detects your Tailwind version and configures colors accordingly.
+
+#### Tailwind v4 (Laravel 12 default)
+
+Colors are configured in `resources/css/app.css` under `@theme`:
+
+```css
+@theme {
+    /* Primary - Blue */
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    /* ... more shades */
+
+    /* Change to green theme */
+    --color-primary-500: #22c55e;
+    --color-primary-600: #16a34a;
+}
+```
+
+#### Tailwind v3
+
+Add colors to `tailwind.config.js`:
 
 ```javascript
 import colors from 'tailwindcss/colors';
@@ -238,13 +260,29 @@ GET /products?trashed=only
 
 ## Color Customization
 
-All views use semantic color names. Change your entire theme by updating `tailwind.config.js`:
+All views use semantic color names (primary, secondary, danger, success, warning).
+
+### Tailwind v4
+
+Edit `resources/css/app.css`:
+
+```css
+@theme {
+    --color-primary-500: #10b981;  /* Emerald/Green theme */
+    --color-primary-600: #059669;
+    --color-secondary-500: #14b8a6; /* Teal */
+    --color-secondary-600: #0d9488;
+}
+```
+
+### Tailwind v3
+
+Edit `tailwind.config.js`:
 
 ```javascript
 colors: {
-    primary: colors.emerald,  // Green theme
+    primary: colors.emerald,
     secondary: colors.teal,
-    // ...
 }
 ```
 

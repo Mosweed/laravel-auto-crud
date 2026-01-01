@@ -451,7 +451,6 @@ HTML;
     public function restore(int \$id): void
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('restore', \${$variable});
         \${$variable}->restore();
         session()->flash('success', '{$model} succesvol hersteld.');
     }
@@ -459,7 +458,6 @@ HTML;
     public function forceDelete(int \$id): void
     {
         \${$variable} = {$model}::onlyTrashed()->findOrFail(\$id);
-        \$this->authorize('forceDelete', \${$variable});
         \${$variable}->forceDelete();
         session()->flash('success', '{$model} permanent verwijderd.');
     }
